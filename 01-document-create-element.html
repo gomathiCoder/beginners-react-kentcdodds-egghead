@@ -1,10 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI using vanilla JS and DOM</title>
+</head>
+
 <body>
-  <div id="root"></div>
-  <script type="text/javascript">
-    const rootElement = document.getElementById('root')
-    const element = document.createElement('div')
-    element.textContent = 'Hello World'
-    element.className = 'container'
-    rootElement.appendChild(element)
-  </script>
+    <div id="root"></div>
+    <script type="text/javascript">
+        // Mapping the div in the html document to the script
+        const rootElement = document.getElementById("root");
+
+        // Creating a h1 element using Vanilla JS
+        const elementH1 = document.createElement("h1");
+        // Adding some properties to the created element
+        elementH1.textContent = "Hello World!!";
+        elementH1.className = "container";
+        // Finally rendering the created h1 element inside the rootElement using appendChild() method
+        rootElement.appendChild(elementH1);
+
+        // Creating another element which is paragraph for practice using Vanilla JS
+        const elementP = document.createElement("p");
+        //  Adding properties as well as styling to the paragrap element
+        elementP.textContent = "Hello everyone. I love to code. Happy to start my journey to learn react from scratch.";
+        elementP.className = "para";
+        elementP.style.backgroundColor = "black";
+        elementP.style.fontSize = "xxx-large";
+        elementP.style.color = "pink";
+        elementP.style.padding = "1rem";
+        //  Finally rendering the created p element inside the rootElement using appendChild() method
+        rootElement.appendChild(elementP);
+    </script>
 </body>
+
+</html>
