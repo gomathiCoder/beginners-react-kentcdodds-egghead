@@ -1,13 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI with ReactJS syntax</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</head>
+
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script type="text/javascript">
-    const rootElement = document.getElementById('root')
-    const element = React.createElement('div', {
-      className: 'container',
-      children: 'Hello World',
-    })
-    ReactDOM.render(element, rootElement)
-  </script>
+    <div id="root"></div>
+    <script type="text/javascript">
+        // Mapping the root div element from the HTML document
+        const rootElement = document.getElementById("root");
+
+        /* Creating element using React with createElement Method-1 having one children. 
+        Method-1 uses the following syntax : 
+            React.createElement('element-name', {
+                prop1 : value1,
+                prop2: value2, etc}
+                )
+        In this method property includes the content of the element as children property.
+        Render element1 in ReactDOM to see this output.
+        */
+        const element1 = React.createElement('div', {
+            children: "Hello World!",
+            className: 'container'
+        })
+        // console.log(element1);
+
+        // Creating element using React with createElement Method-1 having more than one children.
+        // Render element2 in ReactDOM to see this output
+        const element2 = React.createElement('h1', {
+            children: ["Hello World!!  ", "Have a nice day. ", "Keep up your hard work "],
+            className: 'container'
+        })
+        // console.log(element2);
+
+        /* Creating element using React with createElement method-2 having 1 children.
+        Method-2 uses the followong syntax:
+            React.createElement('element-name', {
+                prop1 : value1,
+                prop2 : value2, etc},
+            <content of the element>
+                )
+         Render element3 in ReactDOM to see this output
+         */
+        const element3 = React.createElement('button', {
+                className: 'button'
+            },
+            'Work hard')
+        // console.log(element3);
+
+        // Creating element using React with createElement Method-2 having more than one children.
+        // Render element4 in ReactDOM to see this output
+        const element4 = React.createElement('div', {
+                className: 'container'
+            },
+            'Hello Everyone!! ',
+            'I love to code. ',
+            'I believe in learning by doing.')
+        // console.log(element4);
+
+        // Creating element inside element 
+        // Render element5 in ReactDOM to see this output
+        const element5 = React.createElement('h1', {
+            children: React.createElement('span', {
+                    className: 'span'
+                },
+                'Hello World!! ',
+                "This is just a trial. ",
+                "Wait for the main picture."
+            )
+        })
+        console.log(element5)
+
+        // Rendering the created element into the root element using React DOM
+        ReactDOM.render(element5, rootElement);
+    </script>
 </body>
+
+</html>
