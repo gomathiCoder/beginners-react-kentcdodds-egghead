@@ -1,14 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@7.0.0-beta.3/babel.js"></script>
+    <title>Use JSx effectively with React</title>
+</head>
+
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    const rootElement = document.getElementById('root')
-    const children = 'Hello World'
-    const className = 'container'
-    const props = {children, className}
-    const element = <div {...props} />
-    ReactDOM.render(element, rootElement)
-  </script>
+    <div id="root"></div>
+    <script type="text/babel">
+        // Mapping the root div element from HTML document
+        const rootElement = document.getElementById("root");
+
+        // Interpolating value by using JS expression inbetween {} - with single children
+        // Creating two variable to interpolate in the element
+        const myChildren = "Hello World!!";
+        const myClassName = "container";
+        // {} - used to get the value of the JS expression. 
+        // Anything inside curly braces {} is said to be a JS expresion.
+        const element1 = <div className={myClassName}>{myChildren}</div>;
+        // Console log the element. Check out the JS script inside head
+        // console.log(element1);
+
+        // Interpolation with multiple children
+        const children1 = "Hello ";
+        const children2 = "World!!  ";
+        const children3 = "Welcome to Coding World.";
+        const element2 = <div className={myClassName}>
+            {children1}
+            {children2}
+            {children3}
+            </div>;
+        // console.log(element2);
+
+        //  Adding element inside element
+        const element3 = <div className={myClassName}>
+            <span>Hello </span>
+            <strong>World !! </strong>
+            <em>Welcome to the new Coding World.</em>
+            </div>;
+        // console.log(element3);
+
+        // Passing children as a special property of React.createElement() method using JSX
+        const element4 = <div className={myClassName} children={myChildren}></div>;
+        // console.log(element4);
+
+        // Passing more than one children as special property of React.createElement() method using JSX
+        const element5 = <div className={myClassName} children={[children1, children2, children3]}></div>;
+        // console.log(element5);
+
+        // Since it is JSX we can use div as a self closing tag
+        const element6 = <div className={myClassName} children={myChildren} />;
+        // console.log(element6);
+
+        // Creating props object and passing it in HTML tag - one children
+        // Spreading props -> {...props}
+        const className = "container";
+        const children = "Hello World!! Welcome to my new Coding world."
+        const props = {className, children};
+        const element7 = <div {...props} />;
+        // console.log(element7);
+
+        // Adding additional props. This will extend the props object and add the new property to it.
+        const element8 = <div id="app-root" {...props}/>;
+        // console.log(element8);
+
+        // Overriding one property of the props object
+        const element9 = <div id="app-root" {...props} className="classOverriden"/>;
+        console.log(element9);
+
+        // Rendering the created element into the root element using createRoot and render method for React 18 version.
+        ReactDOM.createRoot(rootElement).render(element9);
+    </script>
 </body>
+
+</html>
