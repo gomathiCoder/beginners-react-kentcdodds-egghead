@@ -1,14 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- The Shorter syntax of React Fragment Can only be used in the below babel version -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>React Fragment</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    const element = (
-      <>
-        <span>Hello</span> <span>World</span>
-      </>
-    )
-    ReactDOM.render(element, document.getElementById('root'))
-  </script>
+    <div id="root"></div>
+    <script type="text/babel">
+        // Mapping the root div element with the script
+        const rootElement = document.getElementById("root");
+
+        // If you want to display the element side by side for eg. using two span tags,
+        // it is only possible by using a container such as div. To solve this, React Fragment is used.
+        // First let us use React.Fragment in React.createElement method() for deeper understanding
+        const helloElement = React.createElement('span', {className:'span1'}, "Hello");
+        const worldElement = React.createElement('span', {className:'span2'}, "World!!");
+        const element1 = React.createElement(React.Fragment, 
+        null, 
+        helloElement, 
+        worldElement);
+        // console.log(element1);
+
+        // Nobody want to use React.createElement API directly, so let us see how to use React.Fragment in JSX
+        const element2 = <React.Fragment>
+            <span>Hello</span> <span>World!!</span>
+            </React.Fragment>;
+        // console.log(element2);
+
+        // Shorter syntax React.Fragment
+        const element3 =(<>
+        <span>Hello</span> <span>World!!</span>
+        </>
+        );
+        console.log(element3);
+
+        // Rendering the element into root element
+        ReactDOM.createRoot(rootElement).render(element3);
+    </script>
 </body>
+</html>
