@@ -1,20 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Reusable React Component</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    function Message({children}) {
-      return <div className="message">{children}</div>
-    }
+    <div id="root"></div>
+    <script type="text/babel">
+        // Creating an element
+        const element1 = (<div className = "container">
+            <div className="message">Hello World!! </div>
+            <div className="message">Welcome to my coding World!</div>
+            </div>);
+        // console.log(element1);
 
-    const element = (
-      <div className="container">
-        <Message>Hello World</Message>
-        <Message>Goodbye World</Message>
-      </div>
-    )
+        // As we can see in the ablove element a div tag with className as 'message' is used 2 times,
+        //  only the children of it varies. So let us make the div tag as a reusable component as below
+        // message1 is a Custom React Component and element2 invokes that component
+        const message1 = <div className="message">Hello World!!</div>;
+        const element2 = (<div className="container">
+            {message1}
+            {message1}
+            </div>);
+        // console.log(element2);
 
-    ReactDOM.render(element, document.getElementById('root'))
-  </script>
+        // The above element makes div resuable but the children is same. To pass two different children,
+        // we can use arrow function as follows:
+        const message2 = (props) => <div className="message">{props.msg}</div>;
+        const element3 = <div className="container">
+            {message2({msg : "Hello World!!"})}
+            {message2({msg : "Welcome to my new Coding World!"})}
+            </div>;
+        // console.log(element3);
+
+        // Now let us use JSX syntax to use React Component.
+        // Note: Make sure the React component always starts with Capital letter, if not it will passed as string and not as a function
+        const Message = (props) => <div className="message">{props.children}</div>;
+        
+        // element4 calls the React Component using various methods
+        const element4 = (<div className="container">
+            <Message>Hello World!! </Message>
+            <Message>Welcome to my new Coding World</Message>
+            <Message children="Practice and Learn coding everyday." /> 
+            </div>);
+        console.log(element4)
+
+        // Rendering the element into root element
+        ReactDOM.createRoot(document.getElementById("root")).render(element4);
+    </script>
 </body>
+</html>
