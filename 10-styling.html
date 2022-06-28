@@ -1,56 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- The Shorter syntax of React Fragment Can only be used in the below babel version -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Styling React Components</title>
+</head>
+
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <style>
-    .box {
-      border: 1px solid #333;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-    .box--large {
-      width: 270px;
-      height: 270px;
-    }
-    .box--medium {
-      width: 180px;
-      height: 180px;
-    }
-    .box--small {
-      width: 90px;
-      height: 90px;
-    }
-  </style>
-  <script type="text/babel">
-    function Box({style, size, className = '', ...rest}) {
-      const sizeClassName = size ? `box--${size}` : ''
-      return (
-        <div
-          className={`box ${className} ${sizeClassName}`}
-          style={{fontStyle: 'italic', ...style}}
-          {...rest}
-        />
-      )
-    }
+    <div id="root"></div>
+    <style>
+        .box {
+            border: 3px solid #000000;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
 
-    const element = (
-      <div>
-        <Box size="small" style={{backgroundColor: 'lightblue'}}>
-          small lightblue box
-        </Box>
-        <Box size="medium" style={{backgroundColor: 'pink'}}>
-          medium pink box
-        </Box>
-        <Box size="large" style={{backgroundColor: 'orange'}}>
-          large orange box
-        </Box>
-        <Box>sizeless box</Box>
-      </div>
-    )
+        .box--small {
+            width: 90px;
+            height: 90px;
+        }
 
-    ReactDOM.render(element, document.getElementById('root'))
-  </script>
+        .box--medium {
+            width: 180px;
+            height: 180px;
+        }
+
+        .box--large {
+            width: 270px;
+            height: 270px;
+        }
+
+        .box--border {
+            border-color: purple;
+        }
+    </style>
+    <script type="text/babel">
+        const rootElement = document.getElementById("root");
+
+        function Box({className="", style, size, ...otherprops}){
+            // size is a custom classname, the below code is used to evaluate the actual class name to style the box size, if size is provided. In this case box--small, box--medium, box--large
+            const sizeClassName = size ? `box--${size}` : '';
+
+            // The main use of component is to avoid repetition. The props object consists of the combination of common properties(specified here directly) and uncommon properties(whose values are passed as an argument to this function component).
+            // 1st prop => className has common class 'box' and uncommon custom class sizeClassName and className (if specified)
+            // 2nd prop => style has fontStyle as a common attribute and spreads the other styles from the element
+            // 3rd prop => consists of unique props of that particular elements such children, id,etc.
+            // Note the order is very important always code the common props followed by uncommon ones to avoid overriding unwanted props
+            const props ={ 
+                className:`box ${className} ${sizeClassName}`,
+                style:{fontStyle:"italic", ...style},
+                ...otherprops
+            };
+
+            // Finally we return the function with all the common and unique props within the div tag.
+            return (
+                <div {...props}/>
+            )
+
+            /*
+            The props can be coded within return statement itself as below: 
+            return (
+                <div 
+                    className={`box ${className} ${sizeClassName}`}
+                    style={{fontStyle:"italic", ...style}}
+                    {...otherprops} 
+                />
+            );
+           */
+        }
+
+        const element = (<div>
+            <Box size="small" style={{backgroundColor:"pink", color:'magenta'}}>
+                small pink box
+            </Box>
+            <Box size="medium" style={{backgroundColor:"lightblue"}} id="blue">
+                medium lightblue box
+            </Box>
+            <Box size="large" style={{backgroundColor:"orange"}} className="box--border">
+                large orange box
+            </Box>
+            </div>);
+
+        ReactDOM.createRoot(rootElement).render(element);
+    </script>
 </body>
+
+</html>
