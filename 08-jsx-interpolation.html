@@ -1,26 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- The Shorter syntax of React Fragment Can only be used in the below babel version -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>JSX Interpolation</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    function CharacterCount({text}) {
-      return (
-        <div>
-          {`The text "${text}" has `}
-          {text.length ? <strong>{text.length}</strong> : 'No'}
-          {' characters'}
-        </div>
-      )
-    }
+    <div id="root"></div>
+    <script type="text/babel">
+        const rootElement = document.getElementById("root");
 
-    const element = (
-      <>
-        <CharacterCount text="Hello World" />
-        <CharacterCount text="" />
-      </>
-    )
+        function CharacterCount({text}){
+            return (
+                <div>
+                    {`The text ${text} has `}
+                    {text.length ? <strong>{text.length}</strong> : "No"}
+                    {` characters`}
+                </div>
+            );
+        }
 
-    ReactDOM.render(element, document.getElementById('root'))
-  </script>
+        const element = (<>
+            <CharacterCount text="Hello World"/>
+            <CharacterCount text="" />
+        </>);
+
+        ReactDOM.createRoot(rootElement).render(element);
+    </script>
 </body>
+</html>
