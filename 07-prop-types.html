@@ -1,26 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script> -->
+    <!-- <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script> -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Validation with PropTypes</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script src="https://unpkg.com/prop-types@15.6.1/prop-types.js"></script>
-  <script type="text/babel">
-    const rootElement = document.getElementById('root')
+    <div id="root"></div>
+    <script type="text/babel">
+        // Mapping the div root element with the script
+        const rootElement = document.getElementById("root");
 
-    function SayHello({firstName, lastName}) {
-      return (
-        <div>
-          Hello {firstName} {lastName}!
-        </div>
-      )
-    }
-    SayHello.propTypes = {
-      firstName: PropTypes.string.isRequired,
-      lastName: PropTypes.string.isRequired,
-    }
+        // Creating a function Component to say Hello to the user
+        function SayHello({firstName, lastName, age}){
+            return (
+                <div> Hello {firstName} {lastName}!! Your age is {age}</div>
+            )
+        }
 
-    const element = <SayHello firstName={false} />
+        // propTypes validation is important because user might enter some invalid input.
+        // Now let us see how the PropType is validated internally. Here we are using string and number Validation
+        // The below is the explanation of the code which is built internally in the proptype package
+        /*
+        const PropTypes = {
+            string(props, propName, componentName){
+                if(typeof props[propName] !== 'string'){
+                    return new Error(
+                        `Hey, the component ${componentName} needs the prop ${propName} to be string, but you passed a ${typeof props[propName]} in ${componentName}`
+                    )
+                }
+            },
 
-    ReactDOM.render(element, rootElement)
-  </script>
+            number(props, propName, componentName){
+                if(typeof props[propName] !== 'number'){
+                    return new Error(
+                        `Hey, the component ${componentName} needs the prop ${propName} to be a number, but you have passed a ${typeof props[propName]} in ${componentName}`
+                    )
+                }
+            }
+        };
+        */
+
+        // Using the PropTypes in the function component. The prop-types unpackage scripts add different types of validation which is similar to the above commented code
+        SayHello.propTypes= {
+            firstName : PropTypes.string.isRequired,
+            lastName : PropTypes.string.isRequired,
+            age: PropTypes.number.isRequired
+        };
+
+        // Creating element which uses the React Component 'SayHello'
+        const element = (<>
+            <SayHello firstName={"Tamilini"} lastName={"Sasikumar"} age={1} />
+            <SayHello firstName={false} age={"1"}/>
+            </>);
+
+        // Note: In the production of the React package the propType validation is automatically removed or 
+        //  You can use babel-plugin-transform-react-remove-prop-types to remove unnecessary React propTypes from the production build.
+        // Use the production scripts in the head section instead of development environment of react and react-dom package to check the code in production environment.
+
+        // Rendering the element into root element in React DOM
+        ReactDOM.createRoot(rootElement).render(element);
+    </script>
 </body>
+</html>
