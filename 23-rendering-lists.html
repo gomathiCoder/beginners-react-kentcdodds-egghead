@@ -1,106 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendering a list</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    const allItems = [
-      {id: 'a', value: 'apple'},
-      {id: 'o', value: 'orange'},
-      {id: 'g', value: 'grape'},
-      {id: 'p', value: 'pear'},
-    ]
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const allItems = [
+                {id : 'a', value: 'apple'},
+                {id : 'b', value: 'banana'},
+                {id : 'c', value: 'cherry'},
+                {id : 'd', value: 'dates'},
+                {id : 'f', value: 'fig'}
+            ];
 
-    function App() {
-      const [items, setItems] = React.useState(allItems)
+        function App(){
+        
+            const [items, setItems] = React.useState(allItems);
 
-      function addItem() {
-        setItems([...items, allItems.find(i => !items.includes(i))])
-      }
+            function addItem(){
+                setItems([...items, allItems.find(i => !items.includes(i))]);
+            }
 
-      function removeItem(item) {
-        setItems(items.filter(i => i !== item))
-      }
+            function removeItem(item){
+                setItems(items.filter(i => i !== item));
+            }
 
-      return (
-        <div>
-          <button disabled={items.length >= allItems.length} onClick={addItem}>
-            add item
-          </button>
-          <ul style={{listStyle: 'none', paddingLeft: 0}}>
-            {items.map(item => (
-              <li>
-                <button onClick={() => removeItem(item)}>remove</button>{' '}
-                <label htmlFor={`${item.value}-input`}>{item.value}</label>{' '}
-                <input id={`${item.value}-input`} defaultValue={item.value} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )
-    }
+            return (
+                <div>
+                    <button disabled={items.length >= allItems.length} onClick={addItem}>Add items</button>
+                    <ul style={{listStyle : 'none', paddingLeft : 0}}>
+                        {items.map(item => 
+                            <li key={item.id}>
+                                <button onClick={() => removeItem(item)}>Remove</button>{' '}
+                                <label htmlFor={`${item.value}-input`}>{item.value}</label>{' '}
+                                <input id={`${item.value}-input`} defaultValue={item.value} />
+                            </li>    
+                        )}    
+                    </ul>
+                </div>
+            )
+        }
 
-    ReactDOM.render(<App />, document.getElementById('root'))
-  </script>
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+    <script type="text/babel">
+        function FocusDemo(){
+            const [items, setItems] = React.useState([
+                {id : 'a', value: 'apple'},
+                {id : 'b', value: 'banana'},
+                {id : 'c', value: 'cherry'},
+                {id : 'd', value: 'dates'},
+                {id : 'f', value: 'fig'} 
+                ]);
 
-  <script type="text/babel">
-    function FocusDemo() {
-      const [items, setItems] = React.useState([
-        {id: 'a', value: 'apple'},
-        {id: 'o', value: 'orange'},
-        {id: 'g', value: 'grape'},
-        {id: 'p', value: 'pear'},
-      ])
+            React.useEffect(
+                () => {
+                    const interval = setInterval(
+                        () => setItems(shuffle(items)),
+                        1000
+                    )
+                return () => clearInterval(interval)
+                },
+                []
+            );
+            
+            return (
+                <div>
+                    <div>
+                        <h1>Without key</h1>
+                        {items.map(item => (
+                            <input value={item.value}/>
+                        ))}    
+                    </div> 
+                    <div>
+                        <h1>With key as Index</h1>
+                        {items.map((item, index) => (
+                            <input key={index} value={item.value}/>
+                        ))}  
+                    </div>   
+                    <div>
+                        <h1>With unique key</h1>
+                        {items.map(item => (
+                            <input key={item.id} value={item.value} />
+                        ))}    
+                    </div>
+                </div>
+            )
+        }
 
-      React.useEffect(() => {
-        const interval = setInterval(() => {
-          setItems(shuffle(items))
-        }, 1000)
-        return () => clearInterval(interval)
-      }, [])
+        function shuffle(originalArray){
+            const array = [...originalArray];
+            let currentIndex = array.length;
+            let randomIndex, temporayValue;
 
-      return (
-        <div>
-          <div>
-            <h1>Without Key</h1>
-            {items.map(item => (
-              <input value={item.value} />
-            ))}
-          </div>
-          <div>
-            <h1>With Key as Index</h1>
-            {items.map((item, index) => (
-              <input key={index} value={item.value} />
-            ))}
-          </div>
-          <div>
-            <h1>With Key</h1>
-            {items.map(item => (
-              <input key={item.id} value={item.value} />
-            ))}
-          </div>
-        </div>
-      )
-    }
+            while(0 !== currentIndex){
+                // Pick a remaining element
+                randomIndex = Math.floor(Math.random() *  currentIndex);
+                currentIndex -= 1;
+                //Swap it with the current element
+                temporayValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] =temporayValue;
+            }
 
-    function shuffle(originalArray) {
-      const array = [...originalArray]
-      let currentIndex = array.length
-      let temporaryValue
-      let randomIndex
-      // While there remain elements to shuffle...
-      while (0 !== currentIndex) {
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex)
-        currentIndex -= 1
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex]
-        array[currentIndex] = array[randomIndex]
-        array[randomIndex] = temporaryValue
-      }
-      return array
-    }
-    // uncomment this line to demo:
-    // ReactDOM.render(<FocusDemo />, document.getElementById('root'))
-  </script>
+            return array
+        }
+
+        // uncomment the below code to see the demo of how focus shifts along with item with unique key
+        // ReactDOM.createRoot(document.getElementById('root')).render(<FocusDemo />)
+    </script>
 </body>
+</html>
