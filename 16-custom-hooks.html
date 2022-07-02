@@ -1,37 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reusable Custom hooks</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    function useLocalStorageState(key, defaultValue = '') {
-      const [state, setState] = React.useState(
-        () => window.localStorage.getItem(key) || defaultValue,
-      )
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root');
 
-      React.useEffect(() => {
-        window.localStorage.setItem(key, state)
-      }, [key, state])
+        // We are creating a hook to store the state in local storage and read it on page refresh.
+        // Note : We prefix custom hooks with 'use' because eslint-plugin-react-hooks have rule that any function with 'use' prefix is considered as hook
+        // we follow this naming convention for updating the hooks using the plugin.
+        function useLocalStorageState(key, defaultValue =''){
+            const [state, setState] = React.useState(
+                () => window.localStorage.getItem(key) || defaultValue
+            );
 
-      return [state, setState]
-    }
+            React.useEffect(
+                () => {window.localStorage.setItem(key, state)},
+                [key, state]
+            );
 
-    function Greeting() {
-      const [name, setName] = useLocalStorageState('name')
+            return [state, setState];
+        }
 
-      const handleChange = event => setName(event.target.value)
+        function Greeting(){
+            const [name, setName] = useLocalStorageState('name');
 
-      return (
-        <div>
-          <form>
-            <label htmlFor="name">Name: </label>
-            <input value={name} onChange={handleChange} id="name" />
-          </form>
-          {name ? <strong>Hello {name}</strong> : 'Please type your name'}
-        </div>
-      )
-    }
+            const handleChange = event => setName(event.target.value);
 
-    ReactDOM.render(<Greeting />, document.getElementById('root'))
-  </script>
+            return (
+                <div>
+                    <form>
+                        <label htmlFor="name">Name : </label>
+                        <br/><br/>
+                        <input id="name" onChange={handleChange} value={name} />
+                    </form>
+                    <br/><br/>
+                    {name ? <strong> Hello {name}</strong> : "Please type your name"}
+                </div>
+            )
+        }
+
+        function App(){
+            const [clickCount, setClickCount] = React.useState(0);
+
+            return (
+                <>
+                    <button onClick={() => setClickCount(count => count + 1)}>{clickCount}</button>
+                    <Greeting />
+                </>
+            )
+        }
+
+        ReactDOM.createRoot(rootElement).render(<App />);
+    </script>
 </body>
+</html>
