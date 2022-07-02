@@ -1,45 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- The Shorter syntax of React Fragment Can only be used in the below babel version -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Event Handler</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    const rootElement = document.getElementById('root')
+    <div id="root"></div>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root');
 
-    const state = {eventCount: 0, username: ''}
+        // Creating state object to check for the event change. We update the prop of state when event occurs.
+        const state = {eventCount: 0, username:''};
 
-    function App() {
-      function handleClick() {
-        setState({eventCount: state.eventCount + 1})
-      }
+        // App is a functional react component to display the content of the page
+        function App(){
+            function handleClick(){
+                setState({eventCount : state.eventCount + 1});
+            }
 
-      function handleChange(event) {
-        setState({username: event.target.value})
-      }
+            function handleChange(event){
+                setState({username : event.target.value});
+            }
 
-      return (
-        <div>
-          <p>There have been {state.eventCount} events.</p>
-          <p>
-            <button onClick={handleClick}>Click Me</button>
-          </p>
-          <p>You typed: {state.username}</p>
-          <p>
-            <input onChange={handleChange} />
-          </p>
-        </div>
-      )
-    }
+            return (
+                <div>
+                    <p>You have clicked the button {state.eventCount} times</p>
+                    <button onClick={handleClick}>
+                        Click Me
+                    </button>
+                    <p>You typed : {state.username}</p>
+                    <input onChange={handleChange} />
+                </div>
+            )
+        }
 
-    function setState(newState) {
-      Object.assign(state, newState)
-      renderApp()
-    }
+        // setState function is used to update the value of the current state object with the new state and re-renders the App
+        // It is not a conventional method to re-render a component but we are doing it for learning purpose
+        function setState(newState){
+            Object.assign(state,newState);
+            renderApp();
+        }
 
-    function renderApp() {
-      ReactDOM.render(<App />, document.getElementById('root'))
-    }
+        // renderApp() function is used to render the App component inside the rootElement
+        function renderApp(){
+            ReactDOM.render(<App />, rootElement);
+        }
 
-    renderApp()
-  </script>
+        // This functional call is to initially render the component.
+        renderApp();
+    </script>
 </body>
+</html>
