@@ -1,41 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UseEffect dependancy array</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    function Greeting() {
-      const [name, setName] = React.useState(
-        () => window.localStorage.getItem('name') || '',
-      )
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root');
 
-      React.useEffect(() => {
-        window.localStorage.setItem('name', name)
-      }, [name])
+        function Greeting(){
+            const [name, setName] = React.useState(
+                () => window.localStorage.getItem('name') || ''
+            );
 
-      const handleChange = event => setName(event.target.value)
+            React.useEffect(
+                //The 2nd argument is said to be dependency array which consists of the dependencies which causes side effects.
+                //In this case, only name depends on it. So, it invokes useEffect only when there is change in dependency i.e name
+                //and not every time Greeting component is rendered.
+                // It is just for optimization purpose.  
+                // Note : Use eslint-plugin-react-hooks to automatically update the dependency array
+                () => {
+                    console.log("greeting use Effects")
+                    window.localStorage.setItem('name', name)
+                }, [name]
+            );
+            const handleChange = event => setName(event.target.value);
+            return (
+                <div>
+                    <form>
+                        <label htmlFor="name">Name : </label>
+                        <br/><br/>
+                        <input id="name" onChange={handleChange} value={name} />
+                    </form>
+                    <br/><br/>
+                    {name ? <strong>Hello {name} </strong> : "Please type your name"}
+                </div>
+            )
+        }
 
-      return (
-        <div>
-          <form>
-            <label htmlFor="name">Name: </label>
-            <input value={name} onChange={handleChange} id="name" />
-          </form>
-          {name ? <strong>Hello {name}</strong> : 'Please type your name'}
-        </div>
-      )
-    }
+        /*
+        The App component is rendered first and then greeting component is rendered within the App which in turn
+        invokes useEffect of Greeting component. This is unnecessary. To avoid it, we maintain useEffect dependency
+        array which passed as a 2nd argument of useEffect function.
+        This dependency array consist of all dependencies that cause the side effects
+        */
+        function App(){
+            const [count, setCount] = React.useState(0);
 
-    function App() {
-      const [count, setCount] = React.useState(0)
-      return (
-        <>
-          <button onClick={() => setCount(c => c + 1)}>{count}</button>
-          <Greeting />
-        </>
-      )
-    }
+            return (
+                <>
+                <button onClick={() => setCount(c => c+1)}>{count}</button>
+                <Greeting />
+                </>
+            )
+        }
 
-    ReactDOM.render(<App />, document.getElementById('root'))
-  </script>
+        ReactDOM.createRoot(rootElement).render(<App />)
+    </script>
 </body>
+</html>
