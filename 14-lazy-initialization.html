@@ -1,31 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lazy Initialization</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    function Greeting() {
-      const [name, setName] = React.useState(
-        () => window.localStorage.getItem('name') || '',
-      )
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root');
 
-      React.useEffect(() => {
-        window.localStorage.setItem('name', name)
-      })
+        function Greeting(){
+            /*we need to read the local storage value each time the page is refreshed.
+            When we pass a value to useSate initialization, it executes the expression on each render of Greeting component which is unnecessary.
+            So, when we pass it as a function, useState gets initialised only when the page is refresed and not on each render.
+            In this case reading into local storage is fast, it is not a problem, but when we try to parse a json object it takes time to load the page.
+            So this kind of lazy initialization is very important.
+            Here lexical scoping and closure concept is used internally. 
+            Note that useState initialization is done only during page refresh and not on each render of component.
+            */
+            const [name, setName] = React.useState(
+                ()=> {
+                    console.log('UseState initialization render');
+                    return window.localStorage.getItem('name') || ''
+                }
+                );
+            
+            // Check out the below code to see how the rendering is done without using lazy initialization
+            // const [name, setName] = React.useState(
+            //     (window.localStorage.getItem('name') && console.log('useState initialize render')) || ''
+            //     );
 
-      const handleChange = event => setName(event.target.value)
+            console.log('Greeting component render');
 
-      return (
-        <div>
-          <form>
-            <label htmlFor="name">Name: </label>
-            <input value={name} onChange={handleChange} id="name" />
-          </form>
-          {name ? <strong>Hello {name}</strong> : 'Please type your name'}
-        </div>
-      )
-    }
+            React.useEffect(
+                () => window.localStorage.setItem('name', name)
+            )
+            const handleChange = event => setName(event.target.value);
 
-    ReactDOM.render(<Greeting />, document.getElementById('root'))
-  </script>
+            return (
+                <div>
+                    <form>
+                        <label htmlFor="name">Name : </label>
+                        <br/><br/>
+                        <input id="name" onChange={handleChange} value={name}/>
+                    </form>
+                    <br/><br/>
+                    {name ? <strong> Hello {name}</strong> : "Please type your name"}
+                </div>
+            )
+        }
+
+        ReactDOM.createRoot(rootElement).render(<Greeting />)
+    </script>
 </body>
+</html>
