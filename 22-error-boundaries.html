@@ -1,54 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Error Boundaries</title>
+</head>
+
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script src="https://unpkg.com/react-error-boundary@1.2.5/dist/umd/react-error-boundary.js"></script>
-  <script type="text/babel">
-    const ErrorBoundary = ReactErrorBoundary.ErrorBoundary
-    // class ErrorBoundary extends React.Component {
-    //   state = {error: null}
-    //   static getDerivedStateFromError(error) {
-    //     return {error}
-    //   }
-    //   render() {
-    //     const {error} = this.state
-    //     if (error) {
-    //       return <this.props.FallbackComponent error={error} />
-    //     }
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- third party library for react error boundary -->
+    <script src="https://unpkg.com/react-error-boundary@1.2.5/dist/umd/react-error-boundary.js"></script>
+    <script type="text/babel">
+        // Important note : ErrorBoundaries can only handle certain error which specifically happen within React call stacks.
+        // For eg : errors in eventHandler or Errors in asynchronous call back like PromiseHandler.
 
-    //     return this.props.children
-    //   }
-    // }
+        /* Error boundary is used to customise the error handling behaviour.
+         It have to be a Class component. 
+         We can use a third party library instead of creating class component for it.
+         */
+        // class ErrorBoundary extends React.Component{
+        //     state = {error: null};
+        //     static getDerivedStateFromError(error){
+        //         // this function return any state change when the error occurs.
+        //         // In this case we are returning the error itself
+        //         return {error}
+        //     }
 
-    function ErrorFallback({error}) {
-      return (
-        <div>
-          <p>Something went wrong:</p>
-          <pre>{error.message}</pre>
-        </div>
-      )
-    }
+        //     render () {
+        //         const {error} = this.state;
+        //         if(error){
+        //             //We know that any custom function component should start with Capital letter.
+        //             //But here we start wit small letter 't'his.props.FallbackComponent.
+        //             //This is acceptable because it has '.' operator. So it is treated as function component and not as string.
+        //             return <this.props.FallbackComponent error={error}/>
+        //         }
+        //         return this.props.children
+        //     }
+        // }
 
-    function Bomb() {
-      throw new Error('💥 CABOOM 💥')
-    }
+        // Now lets try the above error boundary using third party library below. Add this library script first.
+        const ErrorBoundary = ReactErrorBoundary.ErrorBoundary;
 
-    function App() {
-      const [explode, setExplode] = React.useState(false)
-      return (
-        <div>
-          <div>
-            <button onClick={() => setExplode(true)}>💣</button>
-          </div>
-          <div>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              {explode ? <Bomb /> : 'Push the button Max!'}
-            </ErrorBoundary>
-          </div>
-        </div>
-      )
-    }
-    ReactDOM.render(<App />, document.getElementById('root'))
-  </script>
+        // FallBack function Component is used to replace the ErrorBoundary area with its content when the error occurs
+        function ErrorFallback({error}){
+            return (
+                <div>
+                    <p>Something went wrong</p>
+                    <pre>{error.message}</pre>
+                </div>
+            )
+        }
+
+        function Bomb(){
+            throw new Error("💥 KABOOM 💥")
+        }
+
+        function App(){
+            const [explode, setExplode] = React.useState(false);
+
+            return (
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <div>
+                        <div>
+                            <button onClick={() => setExplode(true)}>💣</button>    
+                        </div>    
+                        <div>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                {explode ? <Bomb /> : "Push the button!!"}
+                            </ErrorBoundary>
+                        </div>
+                    </div>
+                </ErrorBoundary>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
 </body>
+
+</html>
