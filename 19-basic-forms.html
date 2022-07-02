@@ -1,27 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Forms with React</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    function UsernameForm() {
-      function handleSubmit(event) {
-        event.preventDefault()
-        const username = event.target.elements.usernameInput.value
-        alert(`You entered: ${username}`)
-      }
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        function UsernameForm(){
+            const usernameInputRef = React.useRef();
 
-      return (
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="usernameInput">Username:</label>
-            <input id="usernameInput" type="text" />
-          </div>
-          <button type="submit">Submit</button>
-        </form>
-      )
-    }
+            // We are using onSubmit handle on the form element instead of using onClick on the button.
+            // This is because, onSubmit also submits the form when user click enter button. It handles form submission on any user interactcion.
+            function handleSubmit(event){
+                // After the form is submitted it gives a POST request and refreshes the page. console.log refreshes due to page refresh.
+                // To avoid page refresh we use event.preventDefault() function. This helps us to preserve the console.log after submitting the form
+                event.preventDefault();
+                console.log(event.target);
+                console.dir(event.target);
+                // Please dont use the below method because it breaks the encapsulation of this function.
+                // Also more than one input can be written in form
+                // const username = document.querySelector('input').value;
+                // The event.target[0].value depends on the position of the input element in the form, so we cannot rely on this method
+                // const username = event.target[0].value;
+                //  The event.target.elements[0].value depends on the position of the input element in the form, so we cannot rely on this method
+                // const username = event.target.elements[0].value;
+                // Alternatively, we can use useRef() to retrive the value of input element as follows:
+                // const username = usernameInputRef.current.value;
+                // The below method uses the 'id' or 'name' attribute of target element to retrieve its value.
+                // This method is highly recommended instead of using useRef hook to avoid complications.
+                const username = event.target.elements.username.value;
+                alert(`You entered :  ${username}`)
+            }
 
-    ReactDOM.render(<UsernameForm />, document.getElementById('root'))
-  </script>
+            return (
+                <div>
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="username">
+                            Username :
+                        </label>
+                        <br/>
+                        <input ref={usernameInputRef} type="text" id="username" />
+                        <br/><br/>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<UsernameForm />);
+    </script>
 </body>
+</html>
