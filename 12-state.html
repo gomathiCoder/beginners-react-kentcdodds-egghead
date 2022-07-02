@@ -1,23 +1,59 @@
-<body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    function Greeting() {
-      const [name, setName] = React.useState('')
-      const handleChange = event => setName(event.target.value)
-      return (
-        <div>
-          <form>
-            <label htmlFor="name">Name: </label>
-            <input onChange={handleChange} id="name" />
-          </form>
-          {name ? <strong>Hello {name}</strong> : 'Please type your name'}
-        </div>
-      )
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    ReactDOM.render(<Greeting />, document.getElementById('root'))
-  </script>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const rootElement = document.getElementById('root');
+
+        function Greetings(){
+            /*
+            useState function is a hook which used to manage the state in React component. 
+            It re-render this component when the state value changes and also keep track of the state changes.
+            In useState, we can pass the initial value of the state and it returns an array.
+            That array consists of 2 values: 
+            1.state name 
+            2.function that updates the state with the given new value, when state value changes and re-renders the function component.
+            Note : we can create as many states as we need. React maintains each and every state separately.
+            */
+            const [name, setName] = React.useState('');
+            const [age, setAge] = React.useState();
+
+            // handleNameChange and handleAgeChange functions updates the state value with the value of the target element(here corresponding input).
+            const handleNameChange = event => setName(event.target.value);
+            const handleAgeChange = event => setAge(event.target.value);
+
+            return (
+                <div>
+                    <form>
+                        <label htmlFor="name">Name :</label>
+                        <br/>
+                        <input type="text" id="name" onChange={handleNameChange}/>  
+                        <br/><br/>  
+                        <label htmlFor="age">Age :</label>
+                        <br/>
+                        <input type="number" id="age" onChange={handleAgeChange}/>
+                    </form>
+                    <br/><br/>
+                    {name ? <strong> Hello {name} </strong> : "Please type your name"}
+                    <br/><br/>
+                    {age ? `You are ${age} years old` : "Please enter your age"}
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(rootElement).render(<Greetings />);
+    </script>
 </body>
+
+</html>
