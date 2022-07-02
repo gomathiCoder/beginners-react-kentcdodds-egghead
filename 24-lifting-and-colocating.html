@@ -1,49 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifting and Colocating React State</title>
+</head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
-  <script type="text/babel">
-    function Name({name, onNameChange}) {
-      return (
-        <div>
-          <label>Name: </label>
-          <input value={name} onChange={onNameChange} />
-        </div>
-      )
-    }
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        function Name({name, onNameChange}){
 
-    function FavoriteAnimal() {
-      const [animal, setAnimal] = React.useState('')
-      return (
-        <div>
-          <label>Favorite Animal: </label>
-          <input
-            value={animal}
-            onChange={event => setAnimal(event.target.value)}
-          />
-        </div>
-      )
-    }
+            return (
+                <div>
+                    <label htmlFor="name-input">Name :</label>{' '}
+                    <input id="name-input" value={name} onChange={onNameChange}/>
+                </div>
+            )
+        }
 
-    function Display({name}) {
-      return <div>{`Hey ${name}, you are great!`}</div>
-    }
+        function FavouriteAnimal(){
+            // The animal state is used only in FavouriteAnimal component, so no state lifting is needed.
+            const [animal, setAnimal] = React.useState('');
 
-    function App() {
-      const [name, setName] = React.useState('')
-      return (
-        <form>
-          <Name
-            name={name}
-            onNameChange={event => setName(event.target.value)}
-          />
-          <FavoriteAnimal />
-          <Display name={name} />
-        </form>
-      )
-    }
+            return (
+                <div>
+                    <label htmlFor="">Favourite Animal : </label>{' '}
+                    <input 
+                        value={animal} 
+                        onChange={event => setAnimal(event.target.value)}
+                    />    
+                </div>
+            )
+        }
 
-    ReactDOM.render(<App />, document.getElementById('root'))
-  </script>
+        function Display({name}){
+            return (
+                <div>{`Hey ${name}! Your are great!!`}</div>
+            )
+        }
+
+        function App(){
+            // name state is used in both Name and Display component.
+            // So the name state is lifted to the closest common parent component which is App
+            // And the value of name and its state change is passed from App to both child sibblings Name and Display via props.
+            const [name, setName] = React.useState('');
+            
+            return (
+                <div>
+                    <form>
+                        <Name 
+                            name={name} 
+                            onNameChange={event => setName(event.target.value)}
+                        />
+                        <br/>
+                        <FavouriteAnimal /> 
+                        <br/>
+                        <Display name={name} />           
+                    </form>    
+                </div>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
 </body>
+</html>
